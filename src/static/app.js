@@ -472,7 +472,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function getActivityShareData(name, details) {
+  function createSharingLinksForActivity(name, details) {
     const shareUrl = new URL(window.location.href);
     shareUrl.searchParams.set("activity", name);
 
@@ -490,6 +490,28 @@ document.addEventListener("DOMContentLoaded", () => {
         shareTitle
       )}&body=${encodeURIComponent(`${shareText}\n\n${shareUrl.toString()}`)}`,
     };
+  }
+
+  async function copyTextToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text);
+      return;
+    }
+
+    const fallbackInput = document.createElement("textarea");
+    fallbackInput.value = text;
+    fallbackInput.setAttribute("readonly", "");
+    fallbackInput.style.position = "absolute";
+    fallbackInput.style.left = "-9999px";
+    document.body.appendChild(fallbackInput);
+    fallbackInput.select();
+
+    const copied = document.execCommand("copy");
+    document.body.removeChild(fallbackInput);
+
+    if (!copied) {
+      throw new Error("Copy command failed");
+    }
   }
 
   // Function to render a single activity card
@@ -518,7 +540,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Format the schedule using the new helper function
     const formattedSchedule = formatSchedule(details);
-    const shareData = getActivityShareData(name, details);
+    const shareData = createSharingLinksForActivity(name, details);
 
     // Create activity tag
     const tagHtml = `
@@ -635,7 +657,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (copyShareButton) {
       copyShareButton.addEventListener("click", async () => {
         try {
-          await navigator.clipboard.writeText(shareData.url);
+          await copyTextToClipboard(shareData.url);
           showMessage(`Share link copied for ${name}.`, "success");
         } catch (error) {
           console.error("Error copying share link:", error);
