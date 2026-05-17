@@ -120,6 +120,17 @@ initial_activities = {
         "max_participants": 10,
         "participants": ["james@mergington.edu", "benjamin@mergington.edu"]
     },
+    "Manga Maniacs": {
+        "description": "Dive into vibrant worlds of Japanese manga—meet unforgettable heroes, rivals, and legends in stories packed with heart and adventure.",
+        "schedule": "Tuesdays at 7pm",
+        "schedule_details": {
+            "days": ["Tuesday"],
+            "start_time": "19:00",
+            "end_time": "20:00"
+        },
+        "max_participants": 15,
+        "participants": []
+    },
     "Debate Team": {
         "description": "Develop public speaking and argumentation skills",
         "schedule": "Fridays, 3:30 PM - 5:30 PM",
@@ -186,4 +197,3 @@ initial_teachers = [
         "role": "admin"
     }
 ]
-
