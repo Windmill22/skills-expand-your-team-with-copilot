@@ -533,14 +533,16 @@ document.addEventListener("DOMContentLoaded", () => {
     fallbackInput.style.position = "absolute";
     fallbackInput.style.left = "-9999px";
     document.body.appendChild(fallbackInput);
-    fallbackInput.select();
+    try {
+      fallbackInput.select();
 
-    // execCommand is used only as a legacy fallback for older browsers.
-    const copied = document.execCommand("copy");
-    document.body.removeChild(fallbackInput);
-
-    if (!copied) {
-      throw new Error("Copy command failed");
+      // execCommand is used only as a legacy fallback for older browsers.
+      const copied = document.execCommand("copy");
+      if (!copied) {
+        throw new Error("Unable to copy link. Please try copying manually.");
+      }
+    } finally {
+      document.body.removeChild(fallbackInput);
     }
   }
 
