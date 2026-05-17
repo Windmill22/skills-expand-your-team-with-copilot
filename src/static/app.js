@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     community: { label: "Community", color: "#fff3e0", textColor: "#e65100" },
     technology: { label: "Technology", color: "#e8eaf6", textColor: "#3949ab" },
   };
+  const schoolName = "Mergington High School";
 
   // State for activities and filters
   let allActivities = {};
@@ -473,22 +474,21 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function buildActivityShareData(name, details) {
-    const shareUrl = new URL(window.location.href);
-    shareUrl.searchParams.set("activity", name);
+    const shareUrl = `${window.location.origin}${window.location.pathname}`;
 
     const schedule = formatSchedule(details);
-    const shareTitle = `${name} at Mergington High School`;
-    const shareText = `Check out ${name} at Mergington High School. Schedule: ${schedule}.`;
-    const encodedShareMessage = encodeURIComponent(`${shareText} ${shareUrl.toString()}`);
+    const shareTitle = `${name} at ${schoolName}`;
+    const shareText = `Check out ${name} at ${schoolName}. Schedule: ${schedule}.`;
+    const encodedShareMessage = encodeURIComponent(`${shareText} ${shareUrl}`);
 
     return {
       title: shareTitle,
       text: shareText,
-      url: shareUrl.toString(),
+      url: shareUrl,
       whatsappUrl: `https://wa.me/?text=${encodedShareMessage}`,
       emailUrl: `mailto:?subject=${encodeURIComponent(
         shareTitle
-      )}&body=${encodeURIComponent(`${shareText}\n\n${shareUrl.toString()}`)}`,
+      )}&body=${encodeURIComponent(`${shareText}\n\n${shareUrl}`)}`,
     };
   }
 
