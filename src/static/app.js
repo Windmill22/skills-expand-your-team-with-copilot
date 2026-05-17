@@ -472,7 +472,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function createSharingLinksForActivity(name, details) {
+  function buildActivityShareData(name, details) {
     const shareUrl = new URL(window.location.href);
     shareUrl.searchParams.set("activity", name);
 
@@ -506,6 +506,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.appendChild(fallbackInput);
     fallbackInput.select();
 
+    // execCommand is used only as a legacy fallback for older browsers.
     const copied = document.execCommand("copy");
     document.body.removeChild(fallbackInput);
 
@@ -540,7 +541,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Format the schedule using the new helper function
     const formattedSchedule = formatSchedule(details);
-    const shareData = createSharingLinksForActivity(name, details);
+    const shareData = buildActivityShareData(name, details);
 
     // Create activity tag
     const tagHtml = `
@@ -572,7 +573,7 @@ document.addEventListener("DOMContentLoaded", () => {
       </p>
       ${capacityIndicator}
       <div class="share-actions">
-        <span class="share-label">Share:</span>
+        <span class="share-label">Share this activity:</span>
         <a
           class="share-link"
           href="${shareData.whatsappUrl}"
