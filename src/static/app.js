@@ -41,6 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let searchQuery = "";
   let currentDay = "";
   let currentTimeRange = "";
+  let hasScrolledToSharedActivity = false;
 
   // Authentication state
   let currentUser = null;
@@ -471,10 +472,38 @@ document.addEventListener("DOMContentLoaded", () => {
     Object.entries(filteredActivities).forEach(([name, details]) => {
       renderActivityCard(name, details);
     });
+
+    scrollToSharedActivityFromHash();
+  }
+
+  function createActivityAnchorId(activityName) {
+    return `activity-${activityName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")}`;
+  }
+
+  function scrollToSharedActivityFromHash() {
+    if (hasScrolledToSharedActivity || !window.location.hash) {
+      return;
+    }
+
+    const targetActivity = document.querySelector(window.location.hash);
+    if (!targetActivity) {
+      return;
+    }
+
+    targetActivity.scrollIntoView({ behavior: "smooth", block: "start" });
+    targetActivity.classList.add("shared-activity-highlight");
+    setTimeout(() => {
+      targetActivity.classList.remove("shared-activity-highlight");
+    }, 2000);
+    hasScrolledToSharedActivity = true;
   }
 
   function buildActivityShareData(name, details) {
-    const shareUrl = `${window.location.origin}${window.location.pathname}`;
+    const activityAnchorId = createActivityAnchorId(name);
+    const shareUrl = `${window.location.origin}${window.location.pathname}#${activityAnchorId}`;
 
     const schedule = formatSchedule(details);
     const shareTitle = `${name} at ${schoolName}`;
@@ -519,6 +548,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderActivityCard(name, details) {
     const activityCard = document.createElement("div");
     activityCard.className = "activity-card";
+    activityCard.id = createActivityAnchorId(name);
 
     // Calculate spots and capacity
     const totalSpots = details.max_participants;
